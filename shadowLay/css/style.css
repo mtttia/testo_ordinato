@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300&family=Comfortaa:wght@300&family=Exo:wght@100&family=Rajdhani&display=swap');
+/*
+font-family: 'Assistant', sans-serif;
+font-family: 'Comfortaa', cursive;
+font-family: 'Rajdhani', sans-serif;
+font-family: 'Exo', sans-serif;
+*/
+
+
+.body{
+    background-color: #e0e0e0cb;
+    padding: 20px;
+    font-family: 'Assistant', sans-serif;
+}
+
+.lay-central{    
+    border-radius: 30px;
+    box-shadow: 12px #0f0f0f85;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+}
+
+
+.lay-right{
+    border-radius: 30px;
+    box-shadow: 12px #0f0f0f9a;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+.title{
+    font-family: 'Exo', sans-serif;
+    font-size: 30px;
+}
+
+.header{
+    margin-bottom: 70px;
+}
+
+.btn-in-lay{
+    width: 100%; 
+    transform: translateY(-15px); 
+    background-color: none;
+    border-radius: 30px;
+}
+
+.btn-in-lay:hover{
+    background-color: #eee;
+}
+
+.btn-in-lay:active{
+    background-color: #ccc;
+}
+
+/*modifica bootstrap*/
+
+.btn-check:focus+.btn, .btn:focus{
+    box-shadow: none;
+}
+.textArea{
+    border: none;
+}
+
+.form-control:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #000000;
+    outline: 0;
+    box-shadow: none;
+}
+
+
+.textArea:focus{
+    border:none;
+    outline: none;
+}
+.form-check-input:focus{
+    box-shadow: none;
+}
+.form-check-input:checked{
+    background-color: black;
+    border-color: black;
+}
+
+/*hamburger menu*/
+
+.hamburger-part{
+    background: black;
+    width: 30px;
+    height: 4.5px;
+    margin-top:6px;
+    border-radius: 20px;
+}
+.hamburger-menu{
+    display: block;
+    padding:6px;
+    display:inline-block;
+    cursor:pointer;
+    border-radius: 30px;
+    box-shadow: 3px #0f0f0f67;
+    width: 50px;
+    height: 50px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.hamburger-menu:hover{
+    
+}
+.hamburger-part{
+    transition: 400ms ease;
+}
+.hamburger-part:first-of-type{
+    margin-top: 0px;
+}
+.mobile-menu-opened .hamburger-part:nth-child(1){
+    transform:translateY(9px) translateX(0px)rotate(315deg);
+}
+.mobile-menu-opened .hamburger-part:nth-child(2){
+    transform: rotate(45deg);
+}
+.mobile-menu-opened .hamburger-part:nth-child(3){
+    display:none;
+}
+
+.lay{
+    background-color: rgb(245, 245, 245);
+    color: #333;
+}
+
+.hover-light:hover{
+    background-color: #dddddd3b;
+}
+
+/*menu*/
+.menu-hr{
+    color: #0f0f0f67;
+    background-color: #0f0f0f67;
+}
+
+.other-menu{
+    position: fixed;
+    top: 0px;
+    left: 400px;
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+.other-menu-open{
+    display: block;
+}
+
+.icon-close{
+    display: none;
+}
+.only-icon-close{
+    display: none;
+}
+
+@media (max-width: 550px){
+    /*se lo schermo è più piccolo di 500px mostro l'icona per chiudere il menu nel menu*/
+    .icon-close{
+        display: block;
+        height: 50px;
+        width: 50px;
+        padding: 5px;
+        border-radius: 50px;
+    }
+    .only-icon-close{
+        display: block;
+    }
+    .icon-close:active{
+        background-color: #2b2b2b56;
+    }
+}
+
+.horizontal-menu{
+    height : 100%;
+    width: 350px;
+    transition: all 0.5s ease;
+    transform: translateX(-500px);
+    box-shadow: 0px 0px 25px 0px #07070798;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: .3rem;
+    outline: 0;
+}
+
+.horizontal-menu-open{
+    transform: translateX(0px) !important;
+}
+
+.menu-item{
+    height: 40px;
+    transition: all 0.5s ease;
+    border-radius: 50px;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-left: 5px;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+/*dark*/
+
+.lay-dark
+{
+    background-color: #01002c;
+    color: #e0e0e0;
+}
+
+.body-dark{
+    background-color: #000000;
+    color: #e0e0e0;
+}
+
+
