@@ -1,0 +1,18 @@
+.board-menu-icon{
+    width: 27px;
+    height: 27px;
+}
+
+.board-menu-button{
+    overflow: hidden;
+}
+
+div#modalItrodution {
+    BACKGROUND-COLOR: #00000077;
+}
+
+#chiudiElenco{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

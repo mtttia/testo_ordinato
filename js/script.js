@@ -1,9 +1,17 @@
+
 $(document).ready(function(){
-    
+    //creo un nuovo testo vuoto
+    addText("", "index");
+    cambiaTesto();
+    file_click(testi.getTestoCorrente());
 
     $("#text").keypress(function(){
         change(window.event.keyCode);
     });
+
+    $("#text").change(function (){
+        testi.aggiornaTesto($("#text").val());
+    })
 
     $("#switchDarkMode").change(function ()
     {
@@ -16,11 +24,24 @@ $(document).ready(function(){
             elenco = false;
             possibileElenco = false;
             proxTrattino = false;
+            $("#chiudiElenco").removeClass("visible");
+            $("#chiudiElenco").addClass("invisible");
         }
         else{
             elenco = true;
+            $("#chiudiElenco").addClass("visible");
+            $("#chiudiElenco").removeClass("invisible");
         }
     });
+
+    $("#chiudiElenco").click(function(){
+        document.getElementById("elenco").checked = false
+        elenco = false;
+        possibileElenco = false;
+        proxTrattino = false;
+        $("#chiudiElenco").removeClass("visible");
+        $("#chiudiElenco").addClass("invisible");
+    })
 
     $("#formattaTesto").click(function (){
         formattaTesto($("#text").val());
@@ -46,9 +67,22 @@ $(document).ready(function(){
         $("#text").css("font-size", $("#txtGrandezzaTesto").val() + "px");
     })
 
+    $("#aggiungi_testo").click(function(){
+        addText();
+    })
+
+    $("#chiudiParentesiConDoppioSpazio").change(function(){
+        chiudiParentesiConDoppioSpazio = document.getElementById("chiudiParentesiConDoppioSpazio").checked;
+    })
+
     
+    tutorial.show();
+
+    GestioneFileAperti();
 
 });
+
+$(window).resize(GestioneFileAperti);
 function ChangeFont(value){        
     $("#text").css("font-family", value);
 }
@@ -59,8 +93,33 @@ var elencoChar = "-";
 var cancellaDoppie = true;
 var capsDopoPunto = true;
 var chiusuraElementiAutomatica = true;
+var chiudiParentesiConDoppioSpazio = true;
+var numeroParentesiAperte = 0;
 var cancellaDoppioSpazio = true;
 var caps = false;
+var tutorial = new bootstrap.Modal(document.getElementById('modalItrodution'), {
+    keyboard: false
+  })
+var testi = new Testi(new Array(), new Array());
+var sostituto = new Array(); //si attivano quando si scrive la substring e poi si spinge il comandi "spazio"
+RiempiSostituti();
+//sostituzioni di default
+function RiempiSostituti()
+{
+    //sostituti di default
+    /*
+    -> = → 8594
+    <- = ← 8592
+    --> = ⇉ 8649
+    <-- = ⇇ 8647
+    => = ⇒ 8658
+    <= = ⇐ 8656
+    */
+    sostituto.push(new TextSostitute('->', '→'));
+    sostituto.push(new TextSostitute('=>', '⇒'));
+    sostituto.push(new TextSostitute('<-', '←'));
+    sostituto.push(new TextSostitute('<=', '⇐'));
+}
 
 //utilities
 var elenco = false;
@@ -68,9 +127,11 @@ var possibileElenco = false;
 var proxTrattino = false; //indica che al prossimo carattere premuto dovrà essere inserito un trattino
 
 
+
 function change(keyPressed){    
-    //console.log(keyPressed);
+    //console.log(keyPressed);    
     var t = $("#text").val();
+    testi.aggiornaTesto(t);
     if(proxTrattino)
     {
         text(GetSubstring(t, 0) + "   -  ");
@@ -116,20 +177,52 @@ function change(keyPressed){
                 //console.log("caps");
                 break;
             case ' ':
+                //controllo se è una textsostitute
+                for(var h = 0; h < sostituto.length; h++)
+                {
+                    let indiceP = t.length - sostituto[h].lunghezzaSubstring() - 1;
+                    if(sostituto[h].presente(t.substring(indiceP, t.length + 1)))
+                    {                        
+                        let txt = t.substring(indiceP, t.length + 1);
+                        text(GetSubstring(t, sostituto[h].lunghezzaSubstring() + 1) + sostituto[h].sostituisci(txt));
+                    }
+                }
                 if(possibileElenco && t[t.length-2] == '-'){
                     possibileElenco = false;
                     elenco = true;      
-                    $("#elenco").attr("checked", "true");
+                    document.getElementById("elenco").checked = true;
+                    $("#chiudiElenco").addClass("visible");
+                    $("#chiudiElenco").removeClass("invisible");
                     text(GetSubstring(t, 2) + "   -  ");
                 }
-                if(cancellaDoppioSpazio)
+                if(chiudiParentesiConDoppioSpazio && numeroParentesiAperte >= 1)
                 {
-                    if(t[t.length-2] == " ")
+                    //c'è una parentesi da chiudere
+                    if(t[t.length - 2] == " ")
                     {
-                        text(GetSubstring(t));
+                        //chiudo la parentesi
+                        text(GetSubstring(t, 2) + ") ");
+                        numeroParentesiAperte--;
                     }
                 }
+                else
+                {
+                    if(cancellaDoppioSpazio)
+                    {
+                        if(t[t.length-2] == " ")
+                        {
+                            text(GetSubstring(t));
+                        }
+                    }
+                }
+                
+                
                 break;
+            case '(':
+                numeroParentesiAperte++;
+                break;
+            case ')':
+                numeroParentesiAperte--;
         }
     }
     if(t.length == 1)
@@ -317,7 +410,7 @@ function SostituisciCharAt(stringa, sostituta, indice)
     }
     else
     {
-        var SecondaParte = stringa.substring(indice+1, stringa.length);      
+        var SecondaParte = stringa.substring(indice + 1, stringa.length);      
         return stringa.substring(0, indice) + sostituta + SecondaParte;
     }
 }
@@ -334,3 +427,161 @@ function Menu_Click(menuOpen)
     }
 }
 
+function aggiungiFile(t, nome)
+{
+    let i = addText(t, nome);
+    cambiaTesto(i);
+}
+
+function addText(t, n)
+{    
+    var id = testi.addTesto(t);
+    let nome = "nuovo file " + id;
+    if(arguments.length > 1)
+    {
+        nome = n;
+    }
+    
+
+    addFile(id, nome);  
+
+    return id;
+}
+
+function cambiaTesto(i)
+{    
+    if(arguments.length >= 1)
+    {
+        testi.setTestoCorrente(i);
+    }
+    
+    $("#text").val(testi.getTesto());
+}
+
+//gestione dei file aperti
+/*
+larghezza dei button = 250px
+per dimensioni schermo : (540px	720px	960px	1140px	1320px)
+0 - 540 -> 1
+540 - 720 -> 2
+720 - 960 -> 3
+960 - 1140 -> 4
+1140 - 1320 -> 4
+1302 - oo -> 6
+*/
+let col; //è il numero di col di bootstrap (max 12) che un file utilizza
+let nFile; //n di file massimo in una riga
+let fileInDispaly = 0;
+let file = document.getElementById("pagine");
+
+function GestioneFileAperti()
+{
+    let width = $(window).width();
+    if(width < 540)
+    {
+        col = 12;
+    }
+    else if(width < 720)
+    {
+        col = 6;
+    }
+    else if(width < 960)
+    {
+        col = 4;
+    }
+    else if(width < 1320)
+    {
+        col = 3;
+    }
+    else
+    {
+        col = 2;
+    }
+    nFile = 12 / col;
+}
+
+function addFile(id, nome)
+{
+    var div = document.createElement("div");
+    div.style.marginBottom = "15px";
+    div.setAttribute("id", id+"div");
+    div.setAttribute("class", "col-6 col-md-4 col-lg-3 col-xxl-2 btn-group");
+    var span = document.createElement("span");
+    span.setAttribute("class", "visually-hidden");
+    span.innerHTML = "Toggle Dropdown";
+    var button = document.createElement("button");
+    button.innerHTML = nome;
+    button.setAttribute("id", id + "file");
+    button.setAttribute("class",  " btn btn-primary board-menu-button");
+    button.setAttribute("onclick", "file_click(" + id + ")");
+    var button2  = document.createElement("button");
+    button2.setAttribute("class", "btn btn-primary dropdown-toggle dropdown-toggle-split");
+    button2.setAttribute("data-bs-toggle", "dropdown");
+    button2.setAttribute("aria-expanded", "false");
+    ul = getTendina(id);
+    div.appendChild(button);
+    button2.appendChild(span);
+    div.appendChild(button2);        
+    div.appendChild(ul);
+    file.appendChild(div);
+}
+
+function file_click(id)
+{
+    cambiaTesto(id);
+    //seleziono il file
+    console.log("id : " + id + ", numeroTesti : " + testi.numeroTesti());
+    for(var i = 0; i < testi.numeroTesti(); i++)
+    {
+        if(i == id)
+        {
+            $("#" + i +"file").addClass("btn-warning");
+            $("#" + i +"file").removeClass("btn-primary");
+        }
+        else
+        {
+            $("#" + i +"file").addClass("btn-primary");
+            $("#" + i +"file").removeClass("btn-warning");
+        }
+    }
+}
+
+function getTendina(id){
+    var t = new Tendina("dropdown-item", "dropdown-menu");
+    t.addButton("rinomina", "rinominaFile(" + id + ")");
+    t.addButton("cancella", "cancellaFile(" + id + ")");
+    return t.getElement();
+}
+
+function rinominaFile(id)
+{
+    ren(id, prompt("inserisci il nome sostituto", ""));
+}
+function ren(id, nome)
+{
+    testi.rinominaTestoAt(id, nome);
+    document.getElementById(id + "file").innerHTML = nome;
+}
+function cancellaFile(id)
+{
+    $("#text").val("");
+    //controllo che non sia l'ultimo testo
+    if(testi.numeroTesti() == 1)
+    {
+        testi.rimuoviTesto(id);
+        $("#" + id + "div").remove();
+        addText()
+        
+    }
+    else
+    {
+        testi.rimuoviTesto(id);
+        $("#" + id + "div").remove();
+    }
+    file_click(testi.getTestoCorrente());
+}
+
+function mostraTutorial()
+{
+    tutorial.show();
+}

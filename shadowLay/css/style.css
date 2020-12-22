@@ -8,9 +8,10 @@ font-family: 'Exo', sans-serif;
 
 
 .body{
-    background-color: #e0e0e0cb;
+    background-color: #cddaf5;
     padding: 20px;
     font-family: 'Assistant', sans-serif;
+    transition: all 0.5s ease;
 }
 
 .lay-central{    
@@ -24,6 +25,8 @@ font-family: 'Exo', sans-serif;
 }
 
 
+
+
 .lay-right{
     border-radius: 30px;
     box-shadow: 12px #0f0f0f9a;
@@ -31,6 +34,10 @@ font-family: 'Exo', sans-serif;
     padding-bottom: 20px;
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.lay-round{
+    border-radius: 50px;
 }
 
 
@@ -130,8 +137,19 @@ font-family: 'Exo', sans-serif;
 }
 
 .lay{
-    background-color: rgb(245, 245, 245);
+    background-color: #f3faff;
     color: #333;
+    transition: all 0.5s ease;
+    
+}
+
+.lay-shadow{
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+.btn.primary{
+    background-color: #0094fa;
+    border-color: #0094fa;
 }
 
 .hover-light:hover{
@@ -186,14 +204,13 @@ font-family: 'Exo', sans-serif;
     transition: all 0.5s ease;
     transform: translateX(-500px);
     box-shadow: 0px 0px 25px 0px #07070798;
-    background-color: white;
+    background-color: #cddaf5;
     position: fixed;
     top: 0px;
     left: 0px;
     display: flex;
     flex-direction: column;
     pointer-events: auto;
-    background-color: #fff;
     background-clip: padding-box;
     border-radius: .3rem;
     outline: 0;
@@ -203,8 +220,7 @@ font-family: 'Exo', sans-serif;
     transform: translateX(0px) !important;
 }
 
-.menu-item{
-    height: 40px;
+.menu-item{ 
     transition: all 0.5s ease;
     border-radius: 50px;
     font-size: 20px;
@@ -219,13 +235,30 @@ font-family: 'Exo', sans-serif;
 
 .lay-dark
 {
-    background-color: #01002c;
+    background-color: #0d1117;
     color: #e0e0e0;
 }
 
 .body-dark{
-    background-color: #000000;
+    background-color: #06090f;
     color: #e0e0e0;
 }
 
 
+
+/*media query*/
+@media(max-width:720px){
+    .lay-central{
+        margin-left: 5px;
+        margin-right: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .lay-right{
+        margin-left: 2px;
+        margin-right: 10px;
+    }
+}
